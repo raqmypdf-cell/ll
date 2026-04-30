@@ -1,0 +1,10 @@
+{
+  "appId": "com.ahmed123.mystore",
+  "appName": "test app",
+  "webDir": "dist",
+  "plugins": {
+    "SplashScreen": {
+      "launchAutoHide": false
+    }
+  }
+}
