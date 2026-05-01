@@ -1,29 +1,23 @@
 workflows:
-  capacitor-ios-build:
-    name: Capacitor iOS Build
+  ios-build:
+    name: iOS Build
     max_build_duration: 60
     instance_type: mac_mini_m1
     environment:
-      node: latest
       xcode: latest
       cocoapods: default
     scripts:
-      - name: Install Node Dependencies
+      - name: Install & Sync
         script: |
           npm install
-      - name: Sync Capacitor Files
-        script: |
           npx cap sync ios
-      - name: Install CocoaPods
-        script: |
           cd ios/App && pod install && cd ../..
-      - name: Build & Archive
+      - name: Build Archive
         script: |
           xcodebuild -workspace "ios/App/App.xcworkspace" -scheme "App" -configuration Release -sdk iphoneos -archivePath build/ios/archive.xcarchive archive CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO
       - name: Export IPA
         script: |
           mkdir -p build/ios/ipa
-          # محاولة التصدير باستخدام ملف خيارات افتراضي أو مباشر
-          xcodebuild -exportArchive -archivePath build/ios/archive.xcarchive -exportPath build/ios/ipa -exportOptionsPlist exportOptions.plist || xcodebuild -exportArchive -archivePath build/ios/archive.xcarchive -exportPath build/ios/ipa
+          xcodebuild -exportArchive -archivePath build/ios/archive.xcarchive -exportPath build/ios/ipa
     artifacts:
       - build/ios/ipa/*.ipa
